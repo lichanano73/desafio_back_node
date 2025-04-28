@@ -5,8 +5,8 @@ describe('getRecentCompanies usecase', () => {
     
     const mockRepository = {
       getCompaniesAdheredLastMonth: jest.fn().mockResolvedValue([
-        { cuit: '30-112233445', razonSocial: 'Empresa C', fechaAdhesion: '2024-04-01' },
-        { cuit: '30-556677889', razonSocial: 'Empresa D', fechaAdhesion: '2024-04-15' }
+        { cuit: '30-11223344-5', razonSocial: 'Empresa C', fechaAdhesion: '2024-04-01' },
+        { cuit: '30-55667788-9', razonSocial: 'Empresa D', fechaAdhesion: '2024-04-15' }
       ])
     };
 
