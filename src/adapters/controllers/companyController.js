@@ -10,10 +10,14 @@ exports.setRepository = (repo) => {
   repository = repo;
 };
 
+const paginationSchemaTransfers = paginationSchema(['t.fecha', 'e.razonSocial', 'e.cuit']);
+const paginationSchemaCompanies = paginationSchema(['e.fechaAdhesion', 'e.razonSocial', 'e.cuit']);
+
 exports.getRecentTransfers = async (req, res) => {
     try {
 
-        const parse = paginationSchema.safeParse(req.query);
+        //const parse = paginationSchema.safeParse(req.query);
+        const parse = paginationSchemaTransfers.safeParse(req.query);
         if (!parse.success) {
           return res.status(400).json({ error: parse.error.format() });
         }
@@ -34,7 +38,8 @@ exports.getRecentTransfers = async (req, res) => {
 exports.getRecentCompanies = async (req, res) => {
     try {
 
-        const parse = paginationSchema.safeParse(req.query);
+        //const parse = paginationSchema.safeParse(req.query);
+        const parse = paginationSchemaCompanies.safeParse(req.query);
         if (!parse.success) {
             return res.status(400).json({ error: parse.error.format() });
         }
