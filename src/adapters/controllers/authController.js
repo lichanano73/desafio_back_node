@@ -1,4 +1,3 @@
-const UserRepositoryMySQL = require('../repositories/userRepositoryMySQL');
 const registerUser = require('../../app/usecases/addUser');
 const loginUser = require('../../app/usecases/loginUser');
 
@@ -8,7 +7,11 @@ const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/config');
 
-const repository = new UserRepositoryMySQL();
+
+let repository;
+exports.setRepository = (repo) => {
+  repository = repo;
+};
 
 exports.addUser = async (req, res) => {
   try {
@@ -20,7 +23,8 @@ exports.addUser = async (req, res) => {
 
     console.log(parse.data.password)
 
-    const hash = bcryptjs.hashSync(parse.data.password, 10);
+    const salt = bcryptjs.genSaltSync(10);
+    const hash = bcryptjs.hashSync(parse.data.password, salt);
 
     const nw_user = new User({ 
       username: parse.data.username, 
@@ -63,18 +67,21 @@ exports.loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Username no encontrado' });
     }
 
+    console.log('validator', validator);
+
+    console.log('myUser', myUser);
+
     // Comparar contraseñas
     const passValid = bcryptjs.compareSync(password, myUser.password);
     if (!passValid) return res.status(401).json({ error: 'Contraseña incorrecta' });
 
     // Generar token JWT
     const token = jwt.sign(
-      { id: myUser.id, username: myUser.username },
+      { username: myUser.username },
       config.SECRET,
       { expiresIn: '6h' }
     );
-
-    // Armar respuesta
+    
     return res.status(200).json({
       mensaje: 'Login exitoso',
       token,

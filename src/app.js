@@ -4,6 +4,8 @@ const morgan  = require('morgan');
 
 const config     = require('./config/config');
 const api_routes = require('./ports/http/index');
+require('./config/dependency-injection');
+
 
 const app = express();
 

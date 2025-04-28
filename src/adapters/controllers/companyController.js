@@ -1,13 +1,13 @@
-const CompanyRepositoryMySQL = require('../repositories/companyRepositoryMySQL');
-
 const { companySchema } = require('../../ports/http/validators/companySchema');
 
 const getRecentTransfers = require('../../app/usecases/getRecentTransfers');
 const getRecentCompanies = require('../../app/usecases/getRecentCompanies');
 const addCompany = require('../../app/usecases/addCompany');
 
-const repository = new CompanyRepositoryMySQL();
-
+let repository;
+exports.setRepository = (repo) => {
+  repository = repo;
+};
 
 exports.getRecentTransfers = async (req, res) => {
     try {
