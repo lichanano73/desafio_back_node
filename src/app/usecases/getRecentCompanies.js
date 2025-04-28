@@ -1,3 +1,3 @@
-module.exports = async (repository) => {
-    return await repository.getCompaniesAdheredLastMonth();
+module.exports = async (repository, limit, offset, orderBy, orderDir) => {
+    return await repository.getCompaniesAdheredLastMonth(limit, offset, orderBy, orderDir);
 };

@@ -1,4 +1,5 @@
-const { companySchema } = require('../../ports/http/validators/companySchema');
+const { companySchema }    = require('../../ports/http/validators/companySchema');
+const { paginationSchema } = require('../../ports/http/validators/paginationSchema');
 
 const getRecentTransfers = require('../../app/usecases/getRecentTransfers');
 const getRecentCompanies = require('../../app/usecases/getRecentCompanies');
@@ -11,8 +12,19 @@ exports.setRepository = (repo) => {
 
 exports.getRecentTransfers = async (req, res) => {
     try {
-        const result = await getRecentTransfers(repository);
-        return res.json(result);
+
+        const parse = paginationSchema.safeParse(req.query);
+        if (!parse.success) {
+          return res.status(400).json({ error: parse.error.format() });
+        }
+        
+        const { limit, offset, orderBy, orderDir } = parse.data;
+
+        console.log(`limit ${limit} - offset ${offset} - orderBy ${orderBy} - orderDir ${orderDir}`)
+    
+        const result = await getRecentTransfers(repository, limit, offset, orderBy, orderDir);
+        return res.status(200).json(result);
+        
     } catch (error) {
         console.error('[ERROR] getRecentTransfers:', error);
         return res.status(500).json({ error: 'Error al obtener transferencias recientes' });
@@ -21,8 +33,17 @@ exports.getRecentTransfers = async (req, res) => {
 
 exports.getRecentCompanies = async (req, res) => {
     try {
-        const result = await getRecentCompanies(repository);
-        return res.json(result);
+
+        const parse = paginationSchema.safeParse(req.query);
+        if (!parse.success) {
+            return res.status(400).json({ error: parse.error.format() });
+        }
+
+        const { limit, offset, orderBy, orderDir } = parse.data;
+        
+        const result = await getRecentCompanies(repository, limit, offset, orderBy, orderDir);
+        return res.status(200).json(result);
+
     } catch (error) {
         console.error('[ERROR] getRecentCompanies:', error);
         return res.status(500).json({ error: 'Error al obtener empresas adheridas' });

@@ -2,6 +2,7 @@ const db = require('../../infra/db/connection');
 const User = require('../../domain/User');
 
 class UserRepositoryMySQL {
+  
   async findByUsername(username) {
     return new Promise((resolve, reject) => {
       db.query(`SELECT * FROM usuarios WHERE username = ?`, [username], (err, results) => {
@@ -12,11 +13,11 @@ class UserRepositoryMySQL {
   }
 
   async create(user) {
+
+    const sql = 'INSERT INTO usuarios (username, password) VALUES (?, ?)';
+
     return new Promise((resolve, reject) => {
-      db.query(
-        `INSERT INTO usuarios (username, password) VALUES (?, ?)`,
-        [user.username, user.password],
-        (err, result) => {
+      db.query(sql, [user.username, user.password], (err, result) => {
           if (err) return reject(err);
           resolve(result.insertId);
         }
